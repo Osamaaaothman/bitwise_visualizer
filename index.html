@@ -3,188 +3,105 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>عارض العمليات البتّية</title>
+  <title>Bitwise Pixel Lab</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="app-shell">
-    <header class="app-header">
-      <h1>مختبر العمليات البتّية</h1>
-      <p>تعلّم <span>AND</span> و<span>OR</span> و<span>XOR</span> و<span>NOT</span> بصريًا من خلال شبكة بكسلات تفاعلية.</p>
+  <main class="app">
+    <header class="top card">
+      <h1>Bitwise Pixel Lab</h1>
+      <p>واجهة تعليمية مبسطة لشرح العمليات البتّية بشكل احترافي وواضح.</p>
+
+      <div class="toolbar">
+        <div class="control-group selects">
+          <label class="field">
+            <span>حجم الشبكة</span>
+            <select id="gridSize">
+              <option value="16">16x16</option>
+              <option value="32">32x32</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>نوع العملية</span>
+            <select id="operationSelect">
+              <option value="AND">AND</option>
+              <option value="OR">OR</option>
+              <option value="XOR">XOR</option>
+              <option value="NOT">NOT</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="control-group actions">
+          <button id="applyBtn" class="primary">تطبيق العملية</button>
+          <button id="clearBtn">مسح الكل</button>
+          <button id="copyAToB">نسخ A إلى B</button>
+        </div>
+      </div>
+
+      <div class="mini-tools">
+        <label class="field compact">
+          <span>التطبيق على</span>
+          <select id="shapeTarget">
+            <option value="A">Grid A</option>
+            <option value="B">Grid B</option>
+          </select>
+        </label>
+        <span class="mini-title">أشكال سريعة</span>
+        <button class="shape-btn" data-shape="square">Square</button>
+        <button class="shape-btn" data-shape="circle">Circle</button>
+        <button class="shape-btn" data-shape="diagonal">Diagonal</button>
+      </div>
+
+      <div class="meta-row">
+        <div class="hint" id="operatorHint">AND: 1 فقط إذا كانت القيمتان 1</div>
+        <label class="check-card" for="toggleNumbers">
+          <input type="checkbox" id="toggleNumbers" checked>
+          <span class="check-icon" aria-hidden="true"></span>
+          <span>إظهار الأرقام داخل البكسلات (0/1)</span>
+        </label>
+      </div>
+      <p id="statusBar" class="status" aria-live="polite"></p>
     </header>
 
-    <section class="controls card">
-      <div class="control-row">
-        <label for="gridSize">حجم الشبكة</label>
-        <select id="gridSize">
-          <option value="16">16x16</option>
-          <option value="32">32x32</option>
-          <option value="64">64x64</option>
-        </select>
-
-        <label for="operationSelect">العملية</label>
-        <select id="operationSelect" title="اختر نوع العملية البتّية">
-          <option value="AND">AND</option>
-          <option value="OR">OR</option>
-          <option value="XOR">XOR</option>
-          <option value="NOT">NOT</option>
-        </select>
-
-        <button id="applyBtn" class="primary">تطبيق العملية</button>
-      </div>
-
-      <div class="operator-help" id="operatorHint">AND: 1 فقط عندما تكون القيمتان 1</div>
-
-      <div class="control-row wraps utility-row">
-        <button id="onboardingBtn" title="عرض جولة تعريفية سريعة">جولة سريعة</button>
-        <div class="shortcut-hints" aria-label="اختصارات لوحة المفاتيح">
-          <span><kbd>A</kbd> تطبيق</span>
-          <span><kbd>R</kbd> إعادة ضبط</span>
-          <span><kbd>I</kbd> عكس A</span>
-          <span><kbd>C</kbd> نسخ A→B</span>
-          <span><kbd>S</kbd> مزامنة الرسم</span>
-          <span><kbd>?</kbd> مساعدة</span>
-        </div>
-      </div>
-
-      <div class="control-row wraps">
-        <label class="switch">
-          <input type="checkbox" id="stepMode">
-          <span>وضع الخطوات</span>
-        </label>
-
-        <label class="slider-wrap" for="speedControl">
-          <span>سرعة العرض</span>
-          <input type="range" min="1" max="3" step="1" value="2" id="speedControl">
-          <strong id="speedLabel">متوسط</strong>
-        </label>
-
-        <label class="switch">
-          <input type="checkbox" id="toggleGridLines" checked>
-          <span>إظهار خطوط الشبكة</span>
-        </label>
-
-        <label class="switch">
-          <input type="checkbox" id="toggleNumbers" checked>
-          <span>إظهار الأرقام</span>
-        </label>
-
-        <label class="switch">
-          <input type="checkbox" id="toggleBinary" checked>
-          <span>عرض السلاسل الثنائية</span>
-        </label>
-
-        <label class="switch">
-          <input type="checkbox" id="toggleColumns">
-          <span>عرض الأعمدة الثنائية</span>
-        </label>
-
-        <label class="switch">
-          <input type="checkbox" id="syncMode">
-          <span>مزامنة الرسم من A إلى B</span>
-        </label>
-      </div>
-
-      <div class="control-row wraps">
-        <label for="shapeTarget">توليد شكل في</label>
-        <select id="shapeTarget">
-          <option value="A">Grid A</option>
-          <option value="B">Grid B</option>
-        </select>
-
-        <button class="shape-btn" data-shape="circle">Circle</button>
-        <button class="shape-btn" data-shape="square">Square</button>
-        <button class="shape-btn" data-shape="diagonal">Diagonal line</button>
-        <button id="copyAToB">نسخ A إلى B</button>
-      </div>
-
-      <div class="io-area">
-        <textarea id="ioData" placeholder="تصدير أو لصق JSON هنا للاستيراد"></textarea>
-        <div class="io-buttons">
-          <button id="exportBtn">تصدير JSON</button>
-          <button id="importBtn">استيراد JSON</button>
-          <button id="exportPngA">PNG لـ A</button>
-          <button id="exportPngB">PNG لـ B</button>
-          <button id="exportPngR">PNG للناتج</button>
-          <button id="exportPngAll">PNG للكل</button>
-        </div>
-      </div>
-
-      <p id="statusBar" class="status" aria-live="polite"></p>
-    </section>
-
-    <section class="grids-layout">
-      <article class="grid-card card">
-        <h2>Grid A (الإدخال 1)</h2>
-        <div id="gridA" class="pixel-grid interactive" aria-label="Grid A"></div>
-        <p class="grid-caption">الشبكة الأولى التي تمثل الصورة الثنائية الأساسية.</p>
-        <div class="grid-actions">
-          <button data-action="reset" data-grid="A">إعادة ضبط A</button>
+    <section class="boards">
+      <article class="board card">
+        <h2>Grid A</h2>
+        <div id="gridA" class="pixel-grid"></div>
+        <div class="board-actions">
           <button data-action="invert" data-grid="A">عكس A</button>
-        </div>
-        <div class="binary-panel" id="binaryA">
-          <strong>الصفوف الثنائية</strong>
-          <pre id="rowsA"></pre>
-          <strong class="columns-title">الأعمدة الثنائية</strong>
-          <pre id="colsA"></pre>
+          <button data-action="reset" data-grid="A">مسح A</button>
         </div>
       </article>
 
-      <article class="grid-card card">
-        <h2>Grid B (الإدخال 2)</h2>
-        <div id="gridB" class="pixel-grid interactive" aria-label="Grid B"></div>
-        <p class="grid-caption">الشبكة الثانية للمقارنة مع الشبكة A.</p>
-        <div class="grid-actions">
-          <button data-action="reset" data-grid="B">إعادة ضبط B</button>
+      <article class="board card">
+        <h2>Grid B</h2>
+        <div id="gridB" class="pixel-grid"></div>
+        <div class="board-actions">
           <button data-action="invert" data-grid="B">عكس B</button>
-        </div>
-        <div class="binary-panel" id="binaryB">
-          <strong>الصفوف الثنائية</strong>
-          <pre id="rowsB"></pre>
-          <strong class="columns-title">الأعمدة الثنائية</strong>
-          <pre id="colsB"></pre>
+          <button data-action="reset" data-grid="B">مسح B</button>
         </div>
       </article>
 
-      <article class="grid-card card result-card">
-        <h2>Grid Result (الناتج)</h2>
-        <div id="gridR" class="pixel-grid result" aria-label="Grid Result"></div>
-        <p class="grid-caption">ناتج العملية البتّية على مستوى كل بكسل.</p>
-        <div class="grid-actions">
+      <article class="board card">
+        <h2>Result</h2>
+        <div id="gridR" class="pixel-grid"></div>
+        <div class="board-actions">
+          <button id="exportPngR">تصدير PNG</button>
           <button data-action="reset" data-grid="R">مسح الناتج</button>
-          <button data-action="invert" data-grid="R">عكس الناتج</button>
-        </div>
-        <div class="binary-panel" id="binaryR">
-          <strong>الصفوف الثنائية</strong>
-          <pre id="rowsR"></pre>
-          <strong class="columns-title">الأعمدة الثنائية</strong>
-          <pre id="colsR"></pre>
         </div>
       </article>
     </section>
 
-    <footer class="app-footer card">
-      <a href="https://www.linkedin.com/in/osamaaothman" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn - Osama Othman">
-        This website is built by <strong>Osama Othman</strong>
+    <div id="traceTooltip" class="trace"></div>
+
+    <footer class="footer">
+      <a href="https://www.linkedin.com/in/osamaaothman" target="_blank" rel="noopener noreferrer">
+        Built by Osama Othman
       </a>
     </footer>
-  </div>
-
-  <div id="traceTooltip" class="trace-tooltip" role="status" aria-live="polite"></div>
-
-  <div id="onboardingOverlay" class="onboarding-overlay" aria-hidden="true">
-    <div class="onboarding-card" role="dialog" aria-modal="true" aria-labelledby="onboardingTitle">
-      <button id="onboardingClose" class="close-btn" aria-label="إغلاق">×</button>
-      <p id="onboardingStep" class="onboarding-step"></p>
-      <h3 id="onboardingTitle"></h3>
-      <p id="onboardingText"></p>
-      <div class="onboarding-actions">
-        <button id="onboardingPrev">السابق</button>
-        <button id="onboardingNext" class="primary">التالي</button>
-        <button id="onboardingDone">إنهاء</button>
-      </div>
-    </div>
-  </div>
+  </main>
 
   <script src="script.js"></script>
 </body>
